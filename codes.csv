@@ -1,0 +1,139 @@
+list name	name	label	coding	color
+Consent	1.0	Yes		
+Consent	2.0	No		
+emailconsent	1.0	Yes		
+emailconsent	2.0	No		
+yesno	1.0	Yes		
+yesno	2.0	No		
+testvalid	1.0	Valid		
+testvalid	2.0	Test		
+gender	1.0	Male		
+gender	2.0	Female		
+ageofrespondent	1.0	18-25		
+ageofrespondent	2.0	26-40		
+ageofrespondent	3.0	41-60		
+ageofrespondent	4.0	61+		
+settlement	1.0	Ajuong Thok 		
+settlement	2.0	Pamir		
+settlement	3.0	Host Community		
+rship	1.0	Husband		
+rship	2.0	Wife		
+rship	3.0	Brother 		
+rship	4.0	Sister		
+rship	5.0	Co-wife		
+rship	6.0	Son		
+rship	7.0	Daughter		
+rship	8.0	Other relative		
+marital	1.0	Married	1.0	Green
+marital	2.0	Single	0.0	Yellow
+marital	3.0	Divorced	0.0	Blue
+marital	4.0	Widowed	0.0	Grey
+educ	1.0	Some Primary	1.0	darkred
+educ	2.0	Completed primary	1.5	red
+educ	3.0	Some secondary	2.0	orange
+educ	4.0	Completed secondary	2.5	Yellow
+educ	5.0	Some university	3.0	lightgreen
+educ	6.0	Completed university	3.5	green
+educ	7.0	Graduate degree	4.0	darkgreen
+educ	8.0	No education	0.0	black
+educ	9.0	Vocational training	2.0	grey
+employment	1.0	Employed	1.0	Green
+employment	2.0	Unemployed	0.0	red
+employment	3.0	Self employed	1.0	Blue
+income_source	1.0	Land cultivation		Yellow
+income_source	2.0	Livestock		brown
+income_source	3.0	Small scale trade		blue
+income_source	4.0	Aid		red
+income_source	5.0	Remittance		
+income_source		None		darkred
+income_source	6.0	Casual employment		grey
+income_source	7.0	Formal employment		darkgrey
+income_source	8.0	Don't know		black
+income_source	9.0	I don't wish to answer		black
+income_source	10.0	Other(specify)		purple
+income_amount	1.0	0 SSP		
+income_amount	2.0	0-100 SSP		
+income_amount	3.0	101-300 SSP 		
+income_amount	4.0	301-500 SSP		
+income_amount	5.0	>500 SSP		
+people	1.0	2 to 4		
+people	2.0	5 to 6		
+people	3.0	7 to 10		
+people	4.0	>11		
+residency	1.0	IDP	-1.0	Orange
+residency	2.0	Returnee IDP	0.0	Grey
+residency	3.0	Returnee refugee	0.0	Blue
+residency	4.0	Host Community	1.0	Green
+flee_reason	1.0	Drought		Yellow
+flee_reason	2.0	Lack of food		orange
+flee_reason	3.0	Floods		darkblue
+flee_reason	4.0	Conflict		red
+flee_reason	5.0	Lack of water		blue
+flee_reason	6.0	Other		grey
+period	1.0	1-3 months	0.5	red
+period	2.0	4-6 months	1.0	orange
+period	3.0	About 1 year	2.0	Yellow
+period	4.0	1-2 years	3.0	lightgreen
+period		0	0.0	grey
+period	5.0	Over 2 years	4.0	Green
+month	1.0	January		
+month	2.0	February		
+month	3.0	March		
+month	4.0	April		
+month	5.0	May		
+month	6.0	June		
+month	7.0	July		
+month	8.0	August		
+month	9.0	September		
+month	10.0	October		
+month	11.0	November		
+month	12.0	December		
+disp_times	1.0	Only one movement from the place of origin and now	1.0	Green
+disp_times	2.0	Two or more movement from the place of origin and now	2.0	red
+disp_times	3.0	Don’t remember	888.0	grey
+disp_times	4.0	Don’t want to answer	888.0	grey
+vulnerable	1.0	Child at risk		
+vulnerable	2.0	Unaccompanied or separated child		
+vulnerable	3.0	Woman at risk		
+vulnerable	4.0	Older person at risk		
+vulnerable	5.0	Single parent or caregiver		
+vulnerable	6.0	Household with person with physical and mental disability e.g., blind, deaf. 		
+vulnerable	7.0	Serious medical condition                 		
+vulnerable	8.0	Do not want to declare.		
+year	1.0	2015		
+year	2.0	2016		
+year	3.0	2017		
+year	4.0	2018		
+year	5.0	2019		
+course	1.0	Leathercraft		
+course	2.0	 Garment making (tailoring)		
+course	3.0	 Building and construction		
+course	4.0	 Welding (Metal fabrication)		
+course	5.0	 Plumbing		
+course	6.0	Literacy and numeracy		
+course	7.0	 Furniture		
+course	8.0	Electrical		
+ynd	1.0	Yes		
+ynd	2.0	No		
+ynd	3.0	Don't know		
+year2	1.0	2015		
+year2	2.0	2016		
+year2	3.0	2017		
+year2	4.0	2018		
+year2	5.0	2019		
+market	1.0	Sudan		
+market	2.0	Yida		
+market	3.0	Juba		
+market	4.0	Ajuok Thok Market		
+market	5.0	Pamir Market		
+market	6.0	Jamjang Market		
+change	1.0	Increased	1.0	Green
+change	2.0	Remained the same	0.0	grey
+change	3.0	Decreased	-1.0	red
+change2	1.0	Signiﬁcantly increase	2.0	Green
+change2	2.0	Slightly increase	1.0	lightgreen
+change2	3.0	No change	0.0	grey
+change2	4.0	Slightly decrease	-1.0	Yellow
+change2	5.0	Signiﬁcantly decrease	-2.0	red
+region	1.0	Ajuong Thok	1.0	grey
+region	2.0	Bentiu	0.0	blue

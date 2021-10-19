@@ -1,0 +1,19 @@
+variable_x	variable_y	description	xtitle	ytitle	legendtitle	title	graphtype
+vulnerable 	income_source	We can see that people with disabled people in the household rely mainly on aid while women at risk only rely on small scale trade				Vulnerabilities and main source of incomes	treemap
+flee_reason	income_source	All those who have fled because of lack of food seem to be farmers who are often among the most vulnerables according to what we can see below 				Reason of displacement and source of incomes	treemap
+flee_reason	HH children	People who got displaced because of lack of food have about twice as many children below 5 as the others.	Reason for displacement	Children below 5		Number of children below 5 and source of incomes	violin
+flee_reason	HH total	They are also about 3 more par house hold than the rest of the respondents		Persons in the household		Total number of people in the household and source of incomes	violin
+flee_reason	vulnerable 	All those who have been displaced because of lack of food and have vulnerable people at home (80 % of them) report having a child at risk in their household				Reason of displacement and vulnerabilities in the household	treemap
+targetting_right	marital	Single and divorced people are not so satisfied with the targetting of the project. While only 2 % of married people are not satisfied 35 % of divorced people and 31 % of single people are not satisfied with this.	In your opinion do you think the right beneficiaries <br>have been receiving support from DRC?		Marital status	Estimation of targetting of beneficiaries according to marital status	bar
+period	educ	It seems that the longer people have been IDP the more they are educated	How long have you been an IDP?		Highest level of education	Highest level of education  and duration of displacement	bar
+region	change income	While in Ajuong Thok 80 % estimate their income has increased since the DRC project they only represent 27 % in Pamir. 					
+flee_reason	change income	The project seems to be particularly effective on returnees and less on IDPs (but more for those having been displaced for lack of food if we look more in details)					
+region	change foodsec	While in Ajuong Thok 80 % estimate that the households food security has increased since the DRC project they only represent 27 % in Pamir. 					
+flee_reason	change foodsec	The project seems to be particularly effective on returnees and less on IDPs (but more for those having been displaced for lack of food if we look more in details)					
+region	change2 LH	While 88 % of the beneficiaries from Ajuong Thok believe their livelihood will improve because of the project, they are only 37 % in Pamir.					
+flee_reason	change2 LH	The project seems to be particularly effective on returnees and less on IDPs (but more for those having been displaced for lack of food if we look more in details)					
+gender resp	change2 LH	Male respondents are more optimistic than female					
+region	change2 food_access	While 88 % of the beneficiaries from Ajuong Thok believe their access to food will increase thanks to the project, they are only 34 % in Pamir.					
+flee_reason	change2 food_access	The project seems to be particularly effective on returnees and less on IDPs (but more for those having been displaced for lack of food if we look more in details)					
+gender resp	change2 food_access	Male respondents are more optimistic than female					
+marital	change2 food_access	Married people tends to have more hope the project will help them to increase their access to food					
