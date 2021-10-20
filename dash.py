@@ -200,14 +200,17 @@ def pourcent2(abscisse,ordonnée,dataf,title='',legendtitle='',xaxis=''):
 
 
 
-questions=pd.read_csv('questions.csv',index_col=None,sep='\t')
+questions=pd.read_csv('questions.csv',sep='\t')
+questions=questions[[i for i in questions.columns if 'Unnamed' not in i]]
 codes=pd.read_csv('codes.csv',index_col=None,sep='\t').dropna(how='any',subset=['color'])
 continues=pickle.load( open( "cont_feat.p", "rb" ) )
 cat_cols=pickle.load( open( "cat_cols.p", "rb" ) )
 dummy_cols=pickle.load( open( "dummy.p", "rb" ) )	
 questions.set_index('Idquest',inplace=True)
-
-
+#st.write(questions)
+text=[i for i in questions.columns if questions[i]['Treatment']=='text']
+text2=[questions[i]['question'] for i in text if 'recomm' not in i]+['Recommandation progamming','Recommandation activities'] 
+#st.write(text)
 
 img1 = Image.open("logoAxiom.png")
 img2 = Image.open("logoDRC.png")
@@ -392,89 +395,103 @@ def main():
 					df,xaxis=quest.iloc[i]['xtitle'])
 					fig.update_layout(title_text=quest.iloc[i]['title'],font=dict(size=20),showlegend=False)
 					col2.plotly_chart(fig2,use_container_width=True)
-						
+##############################################WORDCLOUDS##########################################################"						
 						
 	elif topic=='Display Wordclouds':
-		title2.title('Wordclouds for open questions')
-		df=data[[i for i in data.columns if 'text' in i]].copy()
-		#st.write(df)
-		feature=st.sidebar.selectbox('Select the question for which you would like to visualize wordclouds of answers',[questions[i] for i in df.columns])	
-		var=[i for i in questions if questions[i]==feature][0]
 		
-		col1, col3 = st.columns([6,3])
-		col1.title('Wordcloud from question:')
-		col1.title(feature)
-				
-		x, y = np.ogrid[:300, :300]
-		mask = ((x - 150)) ** 2 + ((y - 150)/1.4) ** 2 > 130 ** 2
+		x, y = np.ogrid[100:500, :600]
+		mask = ((x - 300)/2) ** 2 + ((y - 300)/3) ** 2 > 100 ** 2
 		mask = 255 * mask.astype(int)
-		corpus=' '.join(df[var].apply(lambda x:'' if x=='0' else x))
-		corpus=re.sub('[^A-Za-z ]',' ', corpus)
-		corpus=re.sub('\s+',' ', corpus)
-		corpus=corpus.lower()
+	
+		courses,child=False,False
+		title2.title('Wordclouds for open questions')
 		
-		col3.title('')
-		col3.title('')
-		col3.title('')
-		sw=col3.multiselect('Select words you would like to remove from the wordcloud', [i[0] for i in Counter(corpus.split(' ')).most_common()[:20] if i[0] not in STOPWORDS])
+		feature=st.sidebar.selectbox('Select the question for which you would like to visualize wordclouds of answers',[i for i in text2])	
 		
-		if corpus==' ':
-    			corpus='No_response'
-		else:
-			corpus=' '.join([i for i in corpus.split(' ') if i not in sw])
 		
-		wc = WordCloud(background_color="#0E1117", repeat=False, mask=mask)
-		
-		wc.generate(corpus)
-		
-		col1.image(wc.to_array(),width=400)	
-		
-		if col1.checkbox('Would you like to filter Wordcloud according to other questions'):
+		if 'Recommandation' not in feature:
 			
-			st.markdown("""---""")
-			
-			feature2=st.selectbox('Select one question to filter the wordcloud (Select one of the last ones for checking some new tools)',[questions[i] for i in data.columns if \
-			i!='FCS Score' and (i in continues or len(data[i].unique())<=8)])
-			var2=[i for i in questions if questions[i]==feature2][0]
-			
-			if var2 in continues:
-				threshold=st.slider('Select the threshold', min_value=data[var2].fillna(0).min(),max_value=data[var2].fillna(0).max())
-				subcol1,subcol2=st.columns([2,2])	
-				
-				corpus1=' '.join(data[data[var2]<threshold][var].apply(lambda x:'' if x=='0' else x))
-				corpus1=re.sub('[^A-Za-z ]',' ', corpus1)
-				corpus1=re.sub('\s+',' ', corpus1)
-				corpus1=corpus1.lower()
-				if corpus1==' 'or corpus1=='':
-    					corpus1='No_response'
-				else:
-					corpus1=' '.join([i for i in corpus.split(' ') if i not in sw])
-				wc1 = WordCloud(background_color="#0E1117", repeat=False, mask=mask)
-				wc1.generate(corpus1)
-				corpus2=' '.join(data[data[var2]>=threshold][var].apply(lambda x:'' if x=='0' else x))
-				corpus2=re.sub('[^A-Za-z ]',' ', corpus2)
-				corpus2=re.sub('\s+',' ', corpus2)
-				corpus2=corpus2.lower()
-				if corpus2==' ' or corpus2=='':
-    					corpus2='No_response'
-				else:
-					corpus2=' '.join([i for i in corpus.split(' ') if i not in sw])
-				wc2 = WordCloud(background_color="#0E1117", repeat=False, mask=mask)
-				wc2.generate(corpus2)
-				subcol1.write('Response under the threshold')
-				subcol1.image(wc1.to_array(),width=400)
-				subcol2.write('Response over the threshold')
-				subcol2.image(wc2.to_array(),width=400)
+			var=[i for i in questions if questions[i]['question']==feature][0]
+		
+			if var in ['type_business','profitable_explain','howmarket_functionning','business_difficulties']:
+				df=data[data['running_business']=='Yes'].copy()
 			else:
-				subcol1,subcol2=st.columns([2,2])
-				L=data[var2].unique()
+				df=data.copy()
+			
+			col1, col2, col3 = st.columns([1,4,1])
+			col2.title('Wordcloud from question:')
+			col2.title(feature)
 				
-				corpus1=corpus2=corpus3=corpus4=corpus5=corpus6=corpus7=corpus8=''
-				Corpuses=[corpus1,corpus2,corpus3,corpus4,corpus5,corpus6,corpus7,corpus8]
+		
+			corpus=' '.join(df[var].apply(lambda x:'' if x=='0' else x))
+			corpus=re.sub('[^A-Za-z ]',' ', corpus)
+			corpus=re.sub('\s+',' ', corpus)
+			corpus=corpus.lower()
+		
+			col3.title('')
+			col3.title('')
+			col3.title('')
+			sw=col3.multiselect('Select words you would like to remove from the wordcloud \n\n', [i[0] for i in Counter(corpus.split(' ')).most_common() if i[0] not in STOPWORDS][:20])
+		
+			if corpus==' ':
+	    			corpus='No_response'
+			else:
+				corpus=' '.join([i for i in corpus.split(' ') if i not in sw])
+		
+			wc = WordCloud(background_color="#0E1117", repeat=False, mask=mask)		
+			wc.generate(corpus)
+			col2.image(wc.to_array(), use_column_width = True)	
+		
+			if col2.checkbox('Would you like to filter Wordcloud according to other questions'):
+		
+				feature2=col2.selectbox('Select one question to filter the wordcloud',[questions[i]['question'] for i in questions.columns if i not in text])		
+				filter2=[i for i in questions if questions[i]['question']==feature2][0]
+			
+				if filter2 in continues:
+					minimum=col2.slider('Select the minimum value you want to visulize', 	min_value=data[filter2].fillna(0).min(),max_value=data[filter2].fillna(0).max())
+					maximum=col2.slider('Select the maximum value you want to visulize', min_value=minimum,max_value=data[filter2].fillna(0).max())
+					df=df[(df[filter2]>=minimum)&(df[filter2]<=maximum)]	
 				
+			
+				else:
+					filter3=col2.multiselect('Select the responses you want to include', [i for i in data[filter2].unique()])
+					df=df[df[filter2].isin(filter3)]
+			
+				corpus=' '.join(df[var].apply(lambda x:'' if x=='0' else x))
+				corpus=re.sub('[^A-Za-z ]',' ', corpus)
+				corpus=re.sub('\s+',' ', corpus)
+				corpus=corpus.lower()
+			
+				if corpus==' ' or corpus=='':
+    					corpus='No_response'
+				else:
+					corpus=' '.join([i for i in corpus.split(' ') if i not in sw])
+		
+				wc = WordCloud(background_color="#0E1117", repeat=False, mask=mask)
+				wc.generate(corpus)
+				col2.image(wc.to_array(), use_column_width = True)
+		
+		
+			if questions[var]['parent'] in questions.columns:
+			
+				child=True		
+				var2=questions[var]['parent']
+				st.markdown("""---""")	
+				st.subheader('Wordclouds according to question : '+questions[var2]['question'])
+				st.markdown("""---""")	
+				if var2!='profitable':
+					subcol1,subcol2=st.columns([1,1])
+				else:
+					subcol1,subcol2,subcol3=st.columns([1,1,1])
+			
+				L=df[var2].unique()
 				
-				for i in range(len(L)):
-					Corpuses[i]=' '.join(data[data[var2]==L[i]][var].apply(lambda x:'' if x=='0' else x))
+				corpus1=corpus2=corpus3=''
+				Corpuses=[corpus1,corpus2,corpus3]
+				
+				for i in range(len(L)):		
+			
+					Corpuses[i]=' '.join(df[df[var2]==L[i]][var].apply(lambda x:'' if x=='0' else x))
 					Corpuses[i]=re.sub('[^A-Za-z ]',' ', Corpuses[i])
 					Corpuses[i]=re.sub('\s+',' ', Corpuses[i])
 					Corpuses[i]=Corpuses[i].lower()
@@ -484,93 +501,266 @@ def main():
 						Corpuses[i]=' '.join([i for i in Corpuses[i].split(' ') if i not in sw])
 					wc2 = WordCloud(background_color="#0E1117", repeat=False, mask=mask)
 					wc2.generate(Corpuses[i])
-					if i%2==0:
-						subcol1.write('Response : '+str(L[i])+' '+str(len(data[data[var2]==L[i]]))+' '+'repondent')
-						subcol1.image(wc2.to_array(),width=400)
+					if i==0:
+						subcol1.write(str(L[i])+' : '+str(len(df[df[var2]==L[i]]))+' '+'repondents')
+						subcol1.image(wc2.to_array(), use_column_width = True)
+					elif i==1:
+						subcol2.write(str(L[i])+' : '+str(len(df[df[var2]==L[i]]))+' '+'repondents')
+						subcol2.image(wc2.to_array(), use_column_width = True)
 					else:
-						subcol2.write('Response : '+str(L[i])+' '+str(len(data[data[var2]==L[i]]))+' '+'repondent')
-						subcol2.image(wc2.to_array(),width=400)
+						subcol3.write(str(L[i])+' : '+str(len(df[df[var2]==L[i]]))+' '+'repondents')
+						subcol3.image(wc2.to_array(), use_column_width = True)
+		
+			subcol1,subcol2=st.columns([2,2])	
+		
+			if subcol1.checkbox('Would you like to filter Wordcloud according to courses followed?'):
 			
-	elif topic=='Display Sankey Graphs':
+				#st.write(data[data['running_business']=='Yes']['course'].value_counts())
+				courses=True
+			
+				var3='course'
+				st.markdown("""---""")	
+				st.subheader('Wordclouds according to question : '+questions['course']['question'])
+			
+				list_courses=data[var3].unique()
+			
+				if child:
+					if subcol2.checkbox('Include filter according to '+ questions[var2]['question']):
+					#st.write(list_courses,L)			
+						for i in range(4):		
+							st.markdown("""---""")	
+							sub1col1,sub1col2=st.columns([2,2])
+							corpus1=corpus2=corpus3=corpus4=corpus5=corpus6=corpus7=corpus8=''					
+							Corpuses=[corpus1,corpus2,corpus3,corpus4,corpus5,corpus6,corpus7,corpus8]	
+						
+							for k in range(2):
+							
+								Corpuses[4*k]=' '.join(df[df[var3]==list_courses[2*i+k]][var].apply(lambda x:'' if x=='0' else x))
+								Corpuses[4*k]=re.sub('[^A-Za-z ]',' ', Corpuses[4*k])
+								Corpuses[4*k]=re.sub('\s+',' ', Corpuses[4*k])
+								Corpuses[4*k]=Corpuses[4*k].lower()
+						
+								if Corpuses[4*k]==' ' or Corpuses[4*k]=='':
+    									Corpuses[4*k]='No_response'
+								else:
+									Corpuses[4*k]=' '.join([z for z in Corpuses[4*k].split(' ') if i not in sw])
+													
+							wc0 = WordCloud(background_color="#0E1117", repeat=False, mask=mask)
+							wc0.generate(Corpuses[0])
+							wc4 = WordCloud(background_color="#0E1117", repeat=False, mask=mask)
+							wc4.generate(Corpuses[4])
+							sub1col1.write(str(list_courses[2*i])+' : '+str(len(df[df[var3]==list_courses[2*i]]))+' '+'repondents')
+							sub1col1.image(wc0.to_array(), use_column_width = True)
+							sub1col2.write(str(list_courses[2*i+1])+' : '+str(len(df[df[var3]==list_courses[2*i+1]]))+' '+'repondents')
+							sub1col2.image(wc4.to_array(), use_column_width = True)
+							#st.write(Corpuses)
+											
+							for j in range(len(L)):
+								if var2!='profitable':
+									sub2col1,sub2col2,sub2col3,sub2col4=st.columns([1,1,1,1])
+								else:
+									sub2col1,sub2col2,sub2col5,sub2col3,sub2col4,sub2col6=st.columns([1,1,1,1,1,1])
+							
+								for k in range(2):
+									#st.write(2*i+k,j,list_courses,L)
+									Corpuses[4*k+1+j]=' '.join(df[(df[var2]==L[j]) & (df[var3]==list_courses[2*i+k])][var].apply(lambda x:'' if x=='0' else x))
+									#st.write(Corpuses[4*k+1+j])
+									Corpuses[4*k+1+j]=re.sub('[^A-Za-z ]',' ', Corpuses[4*k+1+j])
+									Corpuses[4*k+1+j]=re.sub('\s+',' ', Corpuses[4*k+1+j])
+									Corpuses[4*k+1+j]=Corpuses[4*k+1+j].lower()
+							
+									if Corpuses[4*k+1+j]==' ' or Corpuses[4*k+1+j]=='':
+			   							Corpuses[4*k+1+j]='No_response'
+									else:
+										Corpuses[4*k+1+j]=' '.join([z for z in Corpuses[4*k+1+j].split(' ') if i not in sw])
+						
+							#st.write(Corpuses)
+							wc1 = WordCloud(background_color="#0E1117", repeat=False, mask=mask)
+							wc1.generate(Corpuses[1])				
+							sub2col1.write(L[0]+' : '+str(len(df[(df[var3]==list_courses[2*i]) & (df[var2]==L[0])])))
+							sub2col1.image(wc1.to_array(), use_column_width = True)
+						
+							wc5 = WordCloud(background_color="#0E1117", repeat=False, mask=mask)
+							wc5.generate(Corpuses[5])				
+							sub2col3.write(L[0]+' : '+str(len(df[(df[var3]==list_courses[2*i+1]) & (df[var2]==L[0])])))
+							sub2col3.image(wc5.to_array(), use_column_width = True)
+						
+							wc2 = WordCloud(background_color="#0E1117", repeat=False, mask=mask)
+							wc2.generate(Corpuses[2])				
+							sub2col2.write(L[1]+' : '+str(len(df[(df[var3]==list_courses[2*i]) & (df[var2]==L[1])])))
+							sub2col2.image(wc2.to_array(), use_column_width = True)
+						
+							wc6 = WordCloud(background_color="#0E1117", repeat=False, mask=mask)
+							wc6.generate(Corpuses[6])				
+							sub2col4.write(L[1]+' : '+str(len(df[(df[var3]==list_courses[2*i+1]) & (df[var2]==L[1])])))
+							sub2col4.image(wc6.to_array(), use_column_width = True)
+						
+							if var2=='profitable':
+								wc3 = WordCloud(background_color="#0E1117", repeat=False, mask=mask)
+								wc3.generate(Corpuses[3])				
+								sub2col5.write(L[2]+' : '+str(len(df[(df[var3]==list_courses[2*i]) & (df[var2]==L[2])])))
+								sub2col5.image(wc3.to_array(), use_column_width = True)
+							
+								wc7 = WordCloud(background_color="#0E1117", repeat=False, mask=mask)
+								wc7.generate(Corpuses[7])				
+								sub2col6.write(L[2]+' : '+str(len(df[(df[var3]==list_courses[2*i+1]) & (df[var2]==L[2])])))
+								sub2col6.image(wc7.to_array(), use_column_width = True)			
+					
+			
+				else:
+					subcol1,subcol2=st.columns([2,2])
+								
+					corpus1=corpus2=corpus3=corpus4=corpus5=corpus6=corpus7=corpus8=''
+					Corpuses=[corpus1,corpus2,corpus3,corpus4,corpus5,corpus6,corpus7,corpus8]
+				
+					for i in range(len(list_courses)):		
+			
+						Corpuses[i]=' '.join(df[df[var3]==list_courses[i]][var].apply(lambda x:'' if x=='0' else x))
+						Corpuses[i]=re.sub('[^A-Za-z ]',' ', Corpuses[i])
+						Corpuses[i]=re.sub('\s+',' ', Corpuses[i])
+						Corpuses[i]=Corpuses[i].lower()
+						if Corpuses[i]==' ' or Corpuses[i]=='':
+	    						Corpuses[i]='No_response'
+						else:
+							Corpuses[i]=' '.join([i for i in Corpuses[i].split(' ') if i not in sw])
+						wc2 = WordCloud(background_color="#0E1117", repeat=False, mask=mask)
+						wc2.generate(Corpuses[i])
+						if i%2==0:
+							subcol1.write(str(list_courses[i])+' : '+str(len(df[df[var3]==list_courses[i]]))+' '+'repondents')
+							subcol1.image(wc2.to_array(), use_column_width = True)
+						else:
+							subcol2.write(str(list_courses[i])+' : '+str(len(df[df[var3]==list_courses[i]]))+' '+'repondents')
+							subcol2.image(wc2.to_array(), use_column_width = True)	
 	
-		title2.title('Visuals for questions related to cultures (questions C3 to C17)')
-		st.title('')
+		##########################################Traitement spécifique Recommandations#######################################################
+		else:
+			df=data.copy()
+			col1, col2, col3 = st.columns([1,1,1])
+			
+			if feature=='Recommandation progamming':
+				colonnes=['recomm1_VTC','recomm2_VTC','recomm3_VTC']
+				st.title('Wordcloud from question:')
+				st.title('39) Any recommendations for future improvement in livelihoods Programming/VTC?')
+			else: 
+				colonnes=['recomm1_activities','recomm2_activities','recomm3_activities']
+				st.title('Wordcloud from question:')
+				st.title('44) What recommendations would you propose to improve the project activities?')
+			
+			st.title('')
+			st.title('')
+			st.title('')
+			
+			corpus=' '.join(data[colonnes[0]].dropna())+\
+				' '.join(data[colonnes[1]].dropna())+' '.join(data[colonnes[2]].dropna())
+			corpus=re.sub('[^A-Za-z ]',' ', corpus)
+			corpus=re.sub('\s+',' ', corpus)
+			corpus=corpus.lower()
+			sw=st.multiselect('Select words you would like to remove from the wordclouds \n\n', [i[0] for i in Counter(corpus.split(' ')).most_common() if i[0] not in STOPWORDS][:20])
+			
+			col1, col2, col3 = st.columns([1,1,1])
+			
+			for i in range(3):
+				col_corpus=' '.join(data[colonnes[i]].dropna())
+				col_corpus=re.sub('[^A-Za-z ]',' ', col_corpus)
+				col_corpus=re.sub('\s+',' ', col_corpus)
+				col_corpus=col_corpus.lower()
+				if col_corpus==' ' or col_corpus=='':
+		    			col_corpus='No_response'
+				else:
+					col_corpus=' '.join([i for i in col_corpus.split(' ') if i not in sw])		
+				wc = WordCloud(background_color="#0E1117", repeat=False, mask=mask)		
+				wc.generate(col_corpus)
+				if i==0:
+					col1.subheader('Recommandation 1')
+					col1.image(wc.to_array(), use_column_width = True)
+				elif i==1:
+					col2.subheader('Recommandation 2')	
+					col2.image(wc.to_array(), use_column_width = True)
+				else:
+					col3.subheader('Recommandation 3')
+					col3.image(wc.to_array(), use_column_width = True)
+					
+			if st.checkbox('Would you like to filter Wordcloud according to other questions'):
+				
+						
+				
+				feature2=st.selectbox('Select one question to filter the wordcloud',[questions[i]['question'] for i in questions.columns if i not in text])		
+				filter2=[i for i in questions if questions[i]['question']==feature2][0]
+			
+				if filter2 in continues:
+					minimum=st.slider('Select the minimum value you want to visulize', 	min_value=data[filter2].fillna(0).min(),max_value=data[filter2].fillna(0).max())
+					maximum=st.slider('Select the maximum value you want to visulize', min_value=minimum,max_value=data[filter2].fillna(0).max())
+					df=df[(df[filter2]>=minimum)&(df[filter2]<=maximum)]	
+
+				else:
+					filter3=st.multiselect('Select the responses you want to include', [i for i in data[filter2].unique()])
+					df=df[df[filter2].isin(filter3)]
+				
+								
+				col1, col2, col3 = st.columns([1,1,1])
+				for i in range(3):
+					col_corpus=' '.join(df[colonnes[i]].dropna())
+					col_corpus=re.sub('[^A-Za-z ]',' ', col_corpus)
+					col_corpus=re.sub('\s+',' ', col_corpus)
+					col_corpus=col_corpus.lower()
+					if col_corpus==' ' or col_corpus=='':
+		    				col_corpus='No_response'
+					else:
+						col_corpus=' '.join([i for i in col_corpus.split(' ') if i not in sw])		
+					
+					wc = WordCloud(background_color="#0E1117", repeat=False, mask=mask)		
+					wc.generate(col_corpus)
+					if i==0:
+						col1.subheader('Recommandation 1')
+						col1.image(wc.to_array(), use_column_width = True)
+					elif i==1:
+						col2.subheader('Recommandation 2')	
+						col2.image(wc.to_array(), use_column_width = True)
+					else:
+						col3.subheader('Recommandation 3')
+						col3.image(wc.to_array(), use_column_width = True)
+				
 				
 			
-		sankey=[i for i in data.columns if i[0]=='C' and 'C1_' not in i and 'C2_' not in i and i!='Clan']
-		sankeyseeds=sankey[:65]
-		sank=data[sankeyseeds]
-		bean=sank[[i for i in sank.columns if 'Bean' in i]].copy()
-		sesame=sank[[i for i in sank.columns if 'Sesame' in i]].copy()
-		cowpea=sank[[i for i in sank.columns if 'Cowpea' in i]].copy()
-		maize=sank[[i for i in sank.columns if 'Maize' in i]].copy()
-		other=sank[[i for i in sank.columns if 'Other' in i]].copy()
-		colonnes=['Seeds Planted','Type of seeds','Origin of seeds','Area cultivated','Did you have enough seed',\
-          'Did you face pest attack','Area affected','Have you done pest management','Origin of fertilizer',\
-          'Fertilizer from Wardi','Applied good practices','Used irrigation','Area irrigated']
-		for i in [bean,sesame,cowpea,maize,other]:
-    			i.columns=colonnes
-		bean=bean[bean['Seeds Planted']=='Yes']
-		sesame=sesame[sesame['Seeds Planted']=='Yes']
-		cowpea=cowpea[cowpea['Seeds Planted']=='Yes']
-		maize=maize[maize['Seeds Planted']=='Yes']
-		other=other[other['Seeds Planted']=='Yes']
-		
-		bean['Seeds Planted']=bean['Seeds Planted'].apply(lambda x: 'Beans')
-		sesame['Seeds Planted']=sesame['Seeds Planted'].apply(lambda x: 'Sesame')
-		cowpea['Seeds Planted']=cowpea['Seeds Planted'].apply(lambda x: 'Cowpeas')
-		maize['Seeds Planted']=maize['Seeds Planted'].apply(lambda x: 'Maize')
-		other['Seeds Planted']=other['Seeds Planted'].apply(lambda x: 'Other')
-		
-		sank=pd.DataFrame(columns=colonnes)
-		for i in [bean,sesame,cowpea,maize,other]:
-		    sank=sank.append(i)
-		sank['ones']=np.ones(len(sank))
-		
-		
-		
-		
-		st.title('Some examples')
-		
-		st.markdown("""---""")
-		st.write('Seeds planted - Origin of Seeds - Type of Seeds - Area Cultivated - Did you have enough seeds?')
-		fig=sankey_graph(sank,['Seeds Planted','Origin of seeds','Type of seeds','Area cultivated','Did you have enough seed'],height=600,width=1500)
-		fig.update_layout(plot_bgcolor='black', paper_bgcolor='grey', width=1500)
-		
-		st.plotly_chart(fig,use_container_width=True)
-		
-		st.markdown("""---""")
-		st.write('Origin of fertilizer - Did you face pest attack - Applied good practices - Seeds Planted')
-		fig1=sankey_graph(sank,['Origin of fertilizer','Did you face pest attack','Applied good practices','Seeds Planted'],height=600,width=1500)
-		fig1.update_layout(plot_bgcolor='black', paper_bgcolor='grey', width=1500)
-		
-		st.plotly_chart(fig1,use_container_width=True)
-		
-		st.markdown("""---""")
-		st.write('Area Cultivated - Type of Seeds - Did you face pest attack - Area affected')
-		fig2=sankey_graph(sank,['Area cultivated','Type of seeds','Did you face pest attack','Area affected'],height=600,width=1500)
-		fig2.update_layout(plot_bgcolor='black', paper_bgcolor='grey', width=1500)
-		
-		st.plotly_chart(fig2,use_container_width=True)
-		
-		if st.checkbox('Design my own Sankey Graph'):
-			
-			st.markdown("""---""")
-			feats=st.multiselect('Select features you want to see in the order you want them to appear', colonnes)
-			
-			if len(feats)>=2:
-				st.write(' - '.join(feats))
-				fig3=sankey_graph(sank,feats,height=600,width=1500)
-				fig3.update_layout(plot_bgcolor='black', paper_bgcolor='grey', width=1500)
-				st.plotly_chart(fig3,use_container_width=True)
-		
-		
-		
-			
-	
-	
+			if st.checkbox('Would you like to filter Wordcloud according to courses followed?'):
+				
+				var3='course'
+				
+				st.markdown("""---""")	
+				st.subheader('Wordclouds according to question : '+questions['course']['question'])
+				list_courses=data[var3].unique()
+					
+				for i in range(len(list_courses)):		
+					
+					st.markdown("""---""")	
+					st.write(str(list_courses[i])+' : '+str(len(df[df[var3]==list_courses[i]]))+' '+'repondents')
+					col1, col2, col3 = st.columns([1,1,1])
+					
+					dft=df[df[var3]==list_courses[i]]
+					
+					for i in range(3):
+						col_corpus=' '.join(dft[colonnes[i]].dropna())
+						col_corpus=re.sub('[^A-Za-z ]',' ', col_corpus)
+						col_corpus=re.sub('\s+',' ', col_corpus)
+						col_corpus=col_corpus.lower()
+						if col_corpus==' ' or col_corpus=='':
+				    			col_corpus='No_response'
+						else:
+							col_corpus=' '.join([i for i in col_corpus.split(' ') if i not in sw])		
+						wc = WordCloud(background_color="#0E1117", repeat=False, mask=mask)		
+						wc.generate(col_corpus)
+						if i==0:
+							col1.subheader('Recommandation 1')
+							col1.image(wc.to_array(), use_column_width = True)
+						elif i==1:
+							col2.subheader('Recommandation 2')	
+							col2.image(wc.to_array(), use_column_width = True)
+						else:
+							col3.subheader('Recommandation 3')
+							col3.image(wc.to_array(), use_column_width = True)
+					
 	else:
-		st.title('\t WARDI \t July 2021')	
+		st.title('\t DRC South Sudan \t VTC')	
 
 
     
