@@ -453,8 +453,8 @@ def main():
 				st.write(data[filter2].fillna(0).max())
 				
 				if filter2 in continues:
-					minimum=col2.slider('Select the minimum value you want to visulize', min_value=data[filter2].fillna(0).min(),max_value=data[filter2].fillna(0).max())
-					maximum=col2.slider('Select the maximum value you want to visulize', min_value=minimum,max_value=data[filter2].fillna(0).max())
+					minimum=col2.slider('Select the minimum value you want to visulize', data[filter2].fillna(0).min(),data[filter2].fillna(0).max())
+					maximum=col2.slider('Select the maximum value you want to visulize', minimum,data[filter2].fillna(0).max())
 					df=df[(df[filter2]>=minimum)&(df[filter2]<=maximum)]	
 				
 			
