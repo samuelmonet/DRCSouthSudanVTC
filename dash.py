@@ -442,9 +442,9 @@ def main():
 			wc.generate(corpus)
 			col2.image(wc.to_array(), use_column_width = True)	
 		
-			if col2.checkbox('Would you like to filter Wordcloud according to other questions'):
+			if st.checkbox('Would you like to filter Wordcloud according to other questions'):
 		
-				feature2=col2.selectbox('Select one question to filter the wordcloud',[questions[i]['question'] for i in questions.columns if i not in text])		
+				feature2=st.selectbox('Select one question to filter the wordcloud',[questions[i]['question'] for i in questions.columns if i not in text])		
 				filter2=[i for i in questions if questions[i]['question']==feature2][0]
 			
 				if filter2 in continues:
@@ -456,9 +456,10 @@ def main():
 				
 			
 				else:
-					filter3=col2.multiselect('Select the responses you want to include', [i for i in data[filter2].unique()])
+					filter3=st.multiselect('Select the responses you want to include', [i for i in data[filter2].unique()])
 					df=df[df[filter2].isin(filter3)]
-			
+				
+				col1, col2, col3 = st.columns([1,4,1])
 				corpus=' '.join(df[var].apply(lambda x:'' if x=='0' else x))
 				corpus=re.sub('[^A-Za-z ]',' ', corpus)
 				corpus=re.sub('\s+',' ', corpus)
