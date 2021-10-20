@@ -448,11 +448,11 @@ def main():
 				filter2=[i for i in questions if questions[i]['question']==feature2][0]
 			
 				if filter2 in continues:
-					mini=data[filter2].fillna(0).min()
+					mini=int(data[filter2].fillna(0).min())
 					st.write(mini,type(mini))
-					maxi=data[filter2].fillna(0).max()
-					minimum=col2.slider('Select the minimum value you want to visulize', 20,60)
-					maximum=col2.slider('Select the maximum value you want to visulize', minimum,61)
+					maxi=int(data[filter2].fillna(0).max())
+					minimum=col2.slider('Select the minimum value you want to visulize', mini,maxi)
+					maximum=col2.slider('Select the maximum value you want to visulize', minimum,maxi)
 					df=df[(df[filter2]>=minimum)&(df[filter2]<=maximum)]	
 				
 			
