@@ -234,6 +234,8 @@ def main():
 		title2.title('Correlations uncovered from the database:')
 		title2.title('Focus on questions 37, 38, 40 and 41, related to feeling of improvement thanks to the project')
 		
+		st.write(quest)
+		st.write(quest['variable_x'])
 		
 		for var in ['region','flee_reason','gender resp','course','marital']:
 			
@@ -278,16 +280,13 @@ def main():
 			
 			elif var=='course':
 				st.write('As observed with machine learning results it seems that the course of tailoring which is by far the most important one has reached its limits:')
-				st.write(quest[quest['variable_x']==var])
-					
 				for correlation in quest[quest['variable_x']==var]['variable_y'].unique():
 				
 					st.subheader('Response to question: '+questions[correlation]['question'])
 					col1, col2= st.columns([1,1])
 					col1.plotly_chart(count2(var,correlation,data,xaxis='Course taken'),use_container_width=True)
 					col2.plotly_chart(pourcent2(var,correlation,data,xaxis='Course taken'),use_container_width=True)
-					st.write(correlation)
-			
+								
 			
 					
 			else:
