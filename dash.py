@@ -235,6 +235,7 @@ def main():
 		title2.title('Focus on questions 37, 38, 40 and 41, related to feeling of improvement thanks to the project')
 		
 		st.write(quest)
+		st.write(correl)
 		st.write(quest['variable_x'])
 		
 		for var in ['region','flee_reason','gender resp','course','marital']:
