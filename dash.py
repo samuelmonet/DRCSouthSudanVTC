@@ -278,7 +278,7 @@ def main():
 			
 			elif var=='course':
 				st.write('As observed with machine learning results it seems that the course of tailoring which is by far the most important one has reached its limits:')
-			
+				st.write(quest[quest['variable_x']==var])
 					
 				for correlation in quest[quest['variable_x']==var]['variable_y'].unique():
 				
