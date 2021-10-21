@@ -286,7 +286,7 @@ def main():
 					col1, col2= st.columns([1,1])
 					col1.plotly_chart(count2(var,correlation,data,xaxis='Course taken'),use_container_width=True)
 					col2.plotly_chart(pourcent2(var,correlation,data,xaxis='Course taken'),use_container_width=True)
-			
+					st.write(correlation)
 			
 			
 					
@@ -300,7 +300,7 @@ def main():
 					col1, col2= st.columns([1,1])
 					col1.plotly_chart(count2(var,correlation,data,xaxis='Marital status'),use_container_width=True)
 					col2.plotly_chart(pourcent2(var,correlation,data,xaxis='Marital status'),use_container_width=True)
-					st.write(correlation)
+					
 					
 					
 			
