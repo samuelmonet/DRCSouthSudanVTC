@@ -33,10 +33,10 @@ st.set_page_config(layout="wide")
 def load_data():
 	data = pd.read_csv('viz.csv',sep='\t')
 	data['flee_reason']=data['flee_reason'].apply(lambda x:'Returnee or Host' if x=='0' else x)
-	correl=pd.read_csv('graphs.csv',sep='\t')
-	return data,correl
+	
+	return data
 
-data,correl=load_data()
+data=load_data()
 
 #st.dataframe(correl)
 #st.write(data.columns)
@@ -207,6 +207,7 @@ continues=pickle.load( open( "cont_feat.p", "rb" ) )
 cat_cols=pickle.load( open( "cat_cols.p", "rb" ) )
 dummy_cols=pickle.load( open( "dummy.p", "rb" ) )	
 questions.set_index('Idquest',inplace=True)
+correl=pd.read_csv('graphs.csv',sep='\t')
 #st.write(questions)
 text=[i for i in questions.columns if questions[i]['Treatment']=='text']
 text2=[questions[i]['question'] for i in text if 'recomm' not in i]+['Recommandation progamming','Recommandation activities'] 
