@@ -221,7 +221,7 @@ def main():
 	st.sidebar.image(img1,width=200)
 	st.sidebar.title("")
 	st.sidebar.title("")
-	topic = st.sidebar.radio('What do you want to do ?',('Display correlations related to questions 37,38, 40 and 41','Display other correlations','Display Wordclouds','Display Machine Learning Results'))
+	topic = st.sidebar.radio('What do you want to do ?',('Display Machine Learning Results','Display correlations related to questions 37,38, 40 and 41','Display other correlations','Display Wordclouds'))
 	
 	title2,title3 = st.columns([5,2])
 	title3.image(img2)
@@ -235,7 +235,7 @@ def main():
 		title2.title('Focus on questions 37, 38, 40 and 41, related to feeling of improvement thanks to the project')
 		
 		
-		for var in ['region','flee_reason','gender resp','marital']:
+		for var in ['region','flee_reason','gender resp','course','marital']:
 			
 			st.markdown("""---""")
 			st.header(questions[var]['question'])		
@@ -275,6 +275,20 @@ def main():
 					col1, col2= st.columns([1,1])
 					col1.plotly_chart(count2(var,correlation,data,xaxis='Sex of the respondent'),use_container_width=True)
 					col2.plotly_chart(pourcent2(var,correlation,data,xaxis='Sex of the respondent'),use_container_width=True)
+			
+			elif var=='course':
+				st.write('As observed with machine learning results it seems that the course of tailoring which is by far the most important one has reached its limits:')
+			
+					
+				for correlation in quest[quest['variable_x']==var]['variable_y'].unique():
+				
+					st.subheader('Response to question: '+questions[correlation]['question'])
+					col1, col2= st.columns([1,1])
+					col1.plotly_chart(count2(var,correlation,data,xaxis='Course taken'),use_container_width=True)
+					col2.plotly_chart(pourcent2(var,correlation,data,xaxis='Course taken'),use_container_width=True)
+			
+			
+			
 					
 			else:
 				st.write("Married respondents are more confident that the household's food security will improve because of the project than single and divorced respondents.")
@@ -286,7 +300,10 @@ def main():
 					col1, col2= st.columns([1,1])
 					col1.plotly_chart(count2(var,correlation,data,xaxis='Marital status'),use_container_width=True)
 					col2.plotly_chart(pourcent2(var,correlation,data,xaxis='Marital status'),use_container_width=True)
+					st.write(correlation)
 					
+					
+			
 	
 	elif topic=='Display other correlations':
 		
@@ -761,6 +778,100 @@ def main():
 							col3.subheader('Recommandation 3')
 							col3.image(wc.to_array(), use_column_width = True)
 					
+	elif topic=='Display Machine Learning Results':
+		
+		title2.title('Machine learning results on models trained on:')
+		title2.title('Questions 37, 38, 40 and 41')
+		
+		
+		st.title('')
+		st.markdown("""---""")	
+		st.subheader('Note:')
+		st.write('A machine learning model has been run on the question related to feeling of improvement of the situation thanks to the project, the objective of this was to identify specificaly for these 4 questions. The models are run in order to try to predict as precisely as possible the feeling that the respondents expressed in their responses to these questions. The figures below show for each questions which parameter have a greater impact in the prediction of the model than a normal random aspect (following a statistic normal law')
+		st.write('')
+		st.write('Each line of the graph represent one feature of the survey that is important to predict the response to the question.')
+		st.write('Each point on the right of the feature name represent one person of the survey. A red point represent a high value to the specific feature and a blue point a low value.')
+		st.write('SHAP value: When a point is on the right side, it means that it contributed to a better note while on the left side, this specific caracter of the person reduced the final result of the prediction.')
+		st.write('')
+		st.write('The coding for the responses is indicated under the graph and the interpretation of the graphs is written below.')
+		st.markdown("""---""")	
+				
+		temp = Image.open('changeincome.png')
+		image = Image.new("RGBA", temp.size, "WHITE") # Create a white rgba background
+		image.paste(temp, (0, 0), temp)
+		st.subheader('37) Since the DRC project my income has…')
+		st.image(image, use_column_width = True)
+		st.caption('Region o residence: Ajuong Thok:1 - Pamir:0')
+		st.caption('How long have you been an IDP: Never:0 - 1-3 months:0,5 - 4-6 months:1 - About 1 year:2 - 1-2 years:3 - Over 2 years: 4')
+		st.caption('Marital status: Married:1 - Single:0 - Widowed:0 - Divorced: 0')
+		st.caption('Course Garnment making (tailoring): Has taken the course:1 - Did not take the course: 0')
+		st.caption('Source of income: Land cultivation: Mentionnend Land cultivation as main source of income:1 - Did not mention land cultivation: 0')
+		st.caption('')
+		st.write('We can see that the main parameter for feeling that the level of income has increased is to live in Ajuong Thok. Which shows that the project has been much more effective in this region.')
+		st.write('In second position comes the fact to be host or not displaced sine a long time and then to be married')
+		st.write('Then other parameters could be to live in a small household and/or to have lower income per household member')
+		st.write('It seems also that household with higher number of girls and household whose source of income is land cultivation also feel more confident in the fact that their level of income has incresased.')
+		st.write('Finaly when we look at the courses, the tailoring course appears to be less effective for increasing the level of income than the other ones.')
+		
+		
+		temp = Image.open('changefoodsec.png')
+		image1 = Image.new("RGBA", temp.size, "WHITE") # Create a white rgba background
+		image1.paste(temp, (0, 0), temp)
+		st.subheader('38) Since the DRC project the HHs food security has….')
+		st.image(image1, use_column_width = True)		
+		st.caption('Region o residence: Ajuong Thok:1 - Pamir:0')
+		st.caption('How long have you been an IDP: Never:0 - 1-3 months:0,5 - 4-6 months:1 - About 1 year:2 - 1-2 years:3 - Over 2 years: 4')
+		st.caption('Marital status: Married:1 - Single:0 - Widowed:0 - Divorced: 0')
+		st.caption('Course Garnment making (tailoring): Has taken the course:1 - Did not take the course: 0')
+		st.caption('Go to Ajuok Thok Marke for merchandises or spare parts: Go:1 - Do not go: 0')
+		st.caption('')
+		st.write('We find again the same conclusion as above.')
+		st.write('On top of these, it seems that people who are going to Ajuok Thok Market (which further inforce the effectiveness of the project there) and people who have joined the VTC program since a significant time are more likely to believe that their food security has increased since the project started')
+		
+		
+		
+		temp = Image.open('change2LH.png')
+		image2 = Image.new("RGBA", temp.size, "WHITE") # Create a white rgba background
+		image2.paste(temp, (0, 0), temp)
+		st.subheader('40) Because of the project, I am confident that my livelihood will')
+		st.image(image2, use_column_width = True)
+		st.caption('Region o residence: Ajuong Thok:1 - Pamir:0')
+		st.caption('How long have you been an IDP: Never:0 - 1-3 months:0,5 - 4-6 months:1 - About 1 year:2 - 1-2 years:3 - Over 2 years: 4')
+		st.caption('Marital status: Married:1 - Single:0 - Widowed:0 - Divorced: 0')
+		st.caption('Course Garnment making (tailoring): Has taken the course:1 - Did not take the course: 0')
+		st.caption('')
+		st.write('We observe the same main factors as above: region, household size, time since arrival, land cultivation as main income source and the fact not to have followed tailoring courses.')
+
+
+
+		
+		col1, col2, col3 = st.columns([1,4,2])
+		temp = Image.open('change2food_sec.png')
+		image3 = Image.new("RGBA", temp.size, "WHITE") # Create a white rgba background
+		image3.paste(temp, (0, 0), temp)
+		st.subheader('41) Because of the project, my household’s access to food will')
+		st.image(image3, use_column_width = True)
+		st.caption('Region o residence: Ajuong Thok:1 - Pamir:0')
+		st.caption('How long have you been an IDP: Never:0 - 1-3 months:0,5 - 4-6 months:1 - About 1 year:2 - 1-2 years:3 - Over 2 years: 4')
+		st.caption('Marital status: Married:1 - Single:0 - Widowed:0 - Divorced: 0')
+		st.caption('Course Garnment making (tailoring): Has taken the course:1 - Did not take the course: 0')
+		st.caption('')
+		st.write('Here again the same aspects are coming out of the analyse')
+		
+		st.title('Conclusion/Recommandations')
+		st.write('Given the outcomes of this analyse, I would advise:')  
+		st.write('- Reduce the number of courses in tailoring')
+		st.write('- Analyse differences between Ajuong Thok and Pamir to collect lessons learned and see how the success of Ajuong Thok could be replicated alsewhere.')
+		st.write('- Understand why the project seems to be more effective with married people than with single or divorced people.')
+		
+		
+		
+		
+		
+		
+		
+		
+		
 	else:
 		st.title('\t DRC South Sudan \t VTC')	
 

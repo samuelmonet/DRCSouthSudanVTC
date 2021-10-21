@@ -17,3 +17,7 @@ region	change2 food_access	While 88 % of the beneficiaries from Ajuong Thok bel
 flee_reason	change2 food_access	The project seems to be particularly effective on returnees and less on IDPs (but more for those having been displaced for lack of food if we look more in details)					
 gender resp	change2 food_access	Male respondents are more optimistic than female					
 marital	change2 food_access	Married people tends to have more hope the project will help them to increase their access to food					
+course	change income						
+course	change foodsec						
+course	change2 LH						
+course	change2 food_access						
